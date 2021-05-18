@@ -32,12 +32,30 @@ router.get("/api/workouts", (req, res) => {
     });
 });
 
-router.get("api/workouts/range", ({}, res) => {
-  Workout.find({}).then((dbWorkout) => {
-    res.json(dbWorkout);
-  }).catch(err => {
-    res.status(400).json(err);
-  });
+router.get("/api/workouts/range", (req, res) => {
+  Workout.find({})
+    .then((dbWorkout) => {
+      res.json(dbWorkout);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
 });
+
+router.put("/api/workouts/:id", (req, res) => {
+  Workout.updateOne(
+    { _id: req.params.id },
+    { $push: { exercises: req.body } },
+    (error, edited) => {
+      if (error) {
+        console.log(error);
+        res.send(error);
+      } else {
+        console.log(edited);
+        res.send(edited);
+      }
+    }
+  )
+})
 
 module.exports = router;
